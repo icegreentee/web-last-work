@@ -13,6 +13,11 @@
 <body>
 <div class="login-box" id="app" >
 	<button @click="test">test</button>
+	<button @click="getalluser">getalluser</button>
+	<button @click="getalluserinfo">getalluserinfo</button>
+	<button @click="addoneuserinfo">addoneuserinfo</button>
+	<button @click="updateoneuserinfo">updateoneuserinfo</button>
+	<button @click="deleteoneuserinfo">deleteoneuserinfo</button>
 </div>
 </body>
 
@@ -21,12 +26,79 @@
 		el : '#app',
 		data : {
 			token: "",
+			userinfo:{
+				username:"user",
+				email:"123584",
+				phone:"123584",
+				location:"123584"
+			}
 		},
 		methods : {
 			test(){
 				let url = "http://localhost:8881/auth/res/getMsg";
 				let token = this.token
 				console.log(token)
+				axios.get(url, {
+					params: {
+						access_token:token
+					}
+				}).then(function (response) {
+					console.log(response);
+				}).catch(function (error) {
+					console.log(error);
+				});
+			},
+			getalluser(){
+				let url = "http://localhost:8881/auth/res/getalluser";
+				let token = this.token
+				axios.get(url, {
+					params: {
+						access_token:token
+					}
+				}).then(function (response) {
+					console.log(response);
+				}).catch(function (error) {
+					console.log(error);
+				});
+			},
+			getalluserinfo(){
+				let url = "http://localhost:8881/auth/res/getalluserinfo";
+				let token = this.token
+				axios.get(url, {
+					params: {
+						access_token:token
+					}
+				}).then(function (response) {
+					console.log(response);
+				}).catch(function (error) {
+					console.log(error);
+				});
+			},
+			addoneuserinfo(){
+				let url = "http://localhost:8881/auth/res/addoneuserinfo"+"?access_token="+this.token;
+				let data = this.userinfo
+				axios.post(url, data).then(function (response) {
+					console.log(response);
+				}).catch(function (error) {
+					console.log(error);
+				});
+			},
+			updateoneuserinfo(){
+				let url = "http://localhost:8881/auth/res/updateoneuserinfo";
+				let token = this.token
+				axios.get(url, {
+					params: {
+						access_token:token
+					}
+				}).then(function (response) {
+					console.log(response);
+				}).catch(function (error) {
+					console.log(error);
+				});
+			},
+			deleteoneuserinfo(){
+				let url = "http://localhost:8881/auth/res/deleteoneuserinfo";
+				let token = this.token
 				axios.get(url, {
 					params: {
 						access_token:token
