@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
+	<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+	<script src="https://cdn.bootcss.com/vue/2.5.17/vue.min.js"></script>
+	<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+	<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+<div class="login-box" id="app" >
+	<button @click="test">test</button>
+</div>
+</body>
+
+<script type="text/javascript">
+	new Vue({
+		el : '#app',
+		data : {
+			token: "",
+		},
+		methods : {
+			test(){
+				let url = "http://localhost:8881/auth/res/getMsg";
+				let token = this.token
+				console.log(token)
+				axios.get(url, {
+					params: {
+						access_token:token
+					}
+				}).then(function (response) {
+					console.log(response);
+				}).catch(function (error) {
+					console.log(error);
+				});
+			}
+		},
+		created: function (){
+			let that = this;
+			axios.get('http://localhost:8882/user')
+					.then(function (response) {
+						let token = response.data.tokenValue;
+						that.token = token;
+					})
+					.catch(function (error) {
+						console.log(error);
+					});
+		}
+	})
+
+</script>
+
+<style lang="scss" scoped>
+
+</style>
+
+</html>
