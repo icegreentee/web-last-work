@@ -3,6 +3,8 @@ package com.louis.spring.oauth.server.controller;
 import com.louis.spring.oauth.server.model.Userinfos;
 import com.louis.spring.oauth.server.service.IUserinfosService;
 import com.louis.spring.oauth.server.service.IUsersService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,6 +12,7 @@ import javax.validation.constraints.Null;
 import java.security.Principal;
 import java.util.List;
 
+@Api(value = "资源接口")
 @RestController
 @CrossOrigin()
 public class ResController {

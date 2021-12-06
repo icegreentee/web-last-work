@@ -7,6 +7,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
@@ -51,6 +52,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return manager;
     }
     @Override
+    public void configure(WebSecurity web) throws Exception {
+        // web.ignoring是直接绕开spring security的所有filter，直接跳过验证
+        web.ignoring()
+                .antMatchers("/swagger-ui.html")
+                .antMatchers("/v2/**")
+                .antMatchers("/swagger-resources/**")
+                .antMatchers("/webjars/**");
+    }
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.requestMatchers()
 	        .antMatchers("/login")
@@ -82,7 +92,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     }
                 })
                 .and()
-                .cors().disable().csrf().disable();
+                .cors().and().csrf().disable();
 
     }
 
