@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>Insert title here</title>
+	<title>统一认证登录平台</title>
 	<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
 	<script src="https://cdn.bootcss.com/vue/2.5.17/vue.min.js"></script>
 	<script src="https://unpkg.com/element-ui/lib/index.js"></script>

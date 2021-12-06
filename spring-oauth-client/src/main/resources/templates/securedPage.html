@@ -1,132 +1,254 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<meta charset="UTF-8">
-	<title>Insert title here</title>
-	<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
-	<script src="https://cdn.bootcss.com/vue/2.5.17/vue.min.js"></script>
-	<script src="https://unpkg.com/element-ui/lib/index.js"></script>
-	<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
-	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-</head>
+	<head>
+		<meta charset="UTF-8">
+		<title>用户管理系统</title>
+		<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+		<script src="https://cdn.bootcss.com/vue/2.5.17/vue.min.js"></script>
+		<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+		<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
-<body>
-<div class="login-box" id="app" >
-	<button @click="test">test</button>
-	<button @click="getalluser">getalluser</button>
-	<button @click="getalluserinfo">getalluserinfo</button>
-	<button @click="addoneuserinfo">addoneuserinfo</button>
-	<button @click="updateoneuserinfo">updateoneuserinfo</button>
-	<button @click="deleteoneuserinfo">deleteoneuserinfo</button>
-</div>
-</body>
+	</head>
 
-<script type="text/javascript">
-	new Vue({
-		el : '#app',
-		data : {
-			token: "",
-			userinfo:{
-				username:"user",
-				email:"123584",
-				phone:"123584",
-				location:"123584"
-			}
-		},
-		methods : {
-			test(){
-				let url = "http://localhost:8881/auth/res/getMsg";
-				let token = this.token
-				console.log(token)
-				axios.get(url, {
-					params: {
-						access_token:token
-					}
-				}).then(function (response) {
-					console.log(response);
-				}).catch(function (error) {
-					console.log(error);
-				});
+	<body>
+	<div id="app">
+		<div class="navbar">
+			<div></div>
+			<div class="menu_text">
+				用户管理系统
+			</div>
+			<div class="menu_user">
+				Welcome, <span th:text="${#authentication.name}">Name</span>
+				<a class="menu_exit" href="/">exit</a>
+			</div>
+		</div>
+		<el-divider ></el-divider>
+		<el-button type="primary" style="float: right;margin-right: 20px;" @click="addoneuserinfo">添 加</el-button>
+		<el-table :data="allUserInfo" style="width: 100%;margin: 0 auto;padding-bottom: 18px;">
+			<el-table-column prop="id" label="编号"></el-table-column>
+			<el-table-column prop="username" label="用户名"></el-table-column>
+			<el-table-column prop="email" label="邮箱"></el-table-column>
+			<el-table-column prop="phone" label="电话"></el-table-column>
+			<el-table-column prop="location" label="地址"></el-table-column>
+			<el-table-column fixed="right" label="操作" >
+				<template slot-scope="scope">
+					<el-button @click="updateoneuserinfo(scope.row)" type="text" size="small">修改</el-button>
+					<el-button @click="deleteoneuserinfo(scope.row)" type="text" size="small">删除</el-button>
+				</template>
+			</el-table-column>
+		</el-table>
+
+
+		<el-dialog title="编辑" :visible.sync="editVisible" width="30%" :show-close="false">
+			<el-form ref="form" :model="form" label-width="70px">
+				<el-form-item label="用户名">
+					<el-input v-model="form.username"></el-input>
+				</el-form-item>
+				<el-form-item label="邮箱">
+					<el-input v-model="form.email"></el-input>
+				</el-form-item>
+				<el-form-item label="电话">
+					<el-input v-model="form.phone"></el-input>
+				</el-form-item>
+				<el-form-item label="地址">
+					<el-input v-model="form.location"></el-input>
+				</el-form-item>
+			</el-form>
+			<span slot="footer" class="dialog-footer">
+                <el-button @click="cancelEdit">取 消</el-button>
+                <el-button type="primary" @click="saveEdit">确 定</el-button>
+            </span>
+		</el-dialog>
+
+		<el-dialog title="添加" :visible.sync="addVisible" width="30%" :show-close="false">
+
+			<el-form ref="form" :model="form" label-width="70px">
+				<el-form-item label="用户名">
+					<el-select v-model="form.username" placeholder="请选择">
+						<el-option v-for="item in allUser" :key="item.value" :label="item.value" :value="item.value"/>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="邮箱">
+					<el-input v-model="form.email"></el-input>
+				</el-form-item>
+				<el-form-item label="电话">
+					<el-input v-model="form.phone"></el-input>
+				</el-form-item>
+				<el-form-item label="地址">
+					<el-input v-model="form.location"></el-input>
+				</el-form-item>
+			</el-form>
+			<span slot="footer" class="dialog-footer">
+                <el-button @click="cancelEdit">取 消</el-button>
+                <el-button type="primary" @click="saveAdd">确 定</el-button>
+            </span>
+		</el-dialog>
+	</div>
+	</body>
+
+	<script type="text/javascript">
+		new Vue({
+			el : '#app',
+			data() {
+				return{
+					token: "",
+					allUserInfo:[],
+					editVisible:false,
+					addVisible:false,
+					allUser:[],
+					form:[]
+				}
 			},
-			getalluser(){
-				let url = "http://localhost:8881/auth/res/getalluser";
-				let token = this.token
-				axios.get(url, {
-					params: {
-						access_token:token
-					}
-				}).then(function (response) {
-					console.log(response);
-				}).catch(function (error) {
-					console.log(error);
-				});
-			},
-			getalluserinfo(){
-				let url = "http://localhost:8881/auth/res/getalluserinfo";
-				let token = this.token
-				axios.get(url, {
-					params: {
-						access_token:token
-					}
-				}).then(function (response) {
-					console.log(response);
-				}).catch(function (error) {
-					console.log(error);
-				});
-			},
-			addoneuserinfo(){
-				let url = "http://localhost:8881/auth/res/addoneuserinfo"+"?access_token="+this.token;
-				let data = this.userinfo
-				axios.post(url, data).then(function (response) {
-					console.log(response);
-				}).catch(function (error) {
-					console.log(error);
-				});
-			},
-			updateoneuserinfo(){
-				let url = "http://localhost:8881/auth/res/updateoneuserinfo";
-				let token = this.token
-				axios.get(url, {
-					params: {
-						access_token:token
-					}
-				}).then(function (response) {
-					console.log(response);
-				}).catch(function (error) {
-					console.log(error);
-				});
-			},
-			deleteoneuserinfo(){
-				let url = "http://localhost:8881/auth/res/deleteoneuserinfo";
-				let token = this.token
-				axios.get(url, {
-					params: {
-						access_token:token
-					}
-				}).then(function (response) {
-					console.log(response);
-				}).catch(function (error) {
-					console.log(error);
-				});
-			}
-		},
-		created: function (){
-			let that = this;
-			axios.get('http://localhost:8882/user')
-					.then(function (response) {
-						let token = response.data.tokenValue;
-						that.token = token;
-					})
-					.catch(function (error) {
+			methods : {
+				test(){
+					// let url = "http://localhost:8881/auth/logout"+"?access_token="+this.token;
+					// axios.post(url).then(function (response) {
+					// 	console.log(response);
+					// }).catch(function (error) {
+					// 	console.log(error);
+					// });
+				},
+				getalluser(){
+					let url = "http://localhost:8881/auth/res/getalluser";
+					let token = this.token
+					let that=this;
+					axios.get(url, {
+						params: {
+							access_token:token
+						}
+					}).then(function (response) {
+						for(i=0;i<response.data.length;i++){
+							dt={
+								value: response.data[i],
+								label: i
+							};
+							that.allUser.push(dt);
+						};
+						console.log(that.allUser);
+					}).catch(function (error) {
 						console.log(error);
 					});
+				},
+				getalluserinfo(){
+					let url = "http://localhost:8881/auth/res/getalluserinfo";
+					let that=this;
+					let token = this.token
+					axios.get(url, {
+						params: {
+							access_token:token
+						}
+					}).then(function (response) {
+						that.allUserInfo=response.data;
+					}).catch(function (error) {
+						console.log(error);
+					});
+				},
+				addoneuserinfo(){
+					this.addVisible=true;
+				},
+				updateoneuserinfo(row){
+					this.form=row;
+					this.editVisible=true;
+				},
+				cancelEdit(){
+					this.form=[];
+					this.editVisible=false;
+					this.addVisible=false;
+				},
+				saveEdit(){
+					let that=this;
+					console.log(this.form);
+					let url = "http://localhost:8881/auth/res/updateoneuserinfo"+"?access_token="+this.token;
+
+					axios.post(url,this.form).then(function (response) {
+						that.$message.success("修改成功");
+						that.form=[];
+						that.editVisible=false;
+					}).catch(function (error) {
+						console.log(error);
+					});
+				},
+				saveAdd(){
+					let that=this;
+					let data={
+						username:this.form.username,
+						email:this.form.email,
+						phone:this.form.phone,
+						location:this.form.location
+					};
+					let url = "http://localhost:8881/auth/res/addoneuserinfo"+"?access_token="+this.token;
+					axios.post(url,data).then(function (response) {
+						that.$message.success("添加成功");
+						that.form=[];
+						that.addVisible=false;
+						location.reload();
+					}).catch(function (error) {
+						console.log(error);
+					});
+				},
+				deleteoneuserinfo(row){
+					let url = "http://localhost:8881/auth/res/deleteoneuserinfo"+"?access_token="+this.token;
+					let that=this;
+					this.$confirm('确定要删除吗？', '提示', {
+						type: 'warning'
+					}).then(() => {
+						axios.post(url, row).then(function (response) {
+							that.$message.success("删除成功");
+							location.reload();
+						});
+					})
+				}
+			},
+			created: function (){
+				let that = this;
+				axios.get('http://localhost:8882/user')
+				.then(function (response) {
+					let token = response.data.tokenValue;
+					that.token = token;
+					that.getalluserinfo();
+					that.getalluser();
+				})
+				.catch(function (error) {
+					console.log(error);
+				});
+			}
+		})
+
+	</script>
+
+	<style lang="scss" scoped>
+		.navbar {
+			height: 50px;
+			overflow: hidden;
+			position: relative;
+			margin: 0 10px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
 		}
-	})
-
-</script>
-
-<style lang="scss" scoped>
-
-</style>
+		.el-divider--horizontal {
+			display: block;
+			height: 1px;
+			width: 100%;
+			margin: 0 0 15px 0;
+		}
+		.menu_text {
+			font-size: 1.3rem;
+			font-weight: 600;
+			color: #2c3e50;
+		}
+		.menu_user{
+			font-size: 16px;
+			color: #888;
+		}
+		.menu_exit{
+			margin-left: 15px;
+		}
+		.menu_exit:hover{
+			cursor: pointer;
+			color: dodgerblue;
+		}
+	</style>
 
 </html>

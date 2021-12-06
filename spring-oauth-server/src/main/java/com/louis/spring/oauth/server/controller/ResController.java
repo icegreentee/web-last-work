@@ -43,13 +43,15 @@ public class ResController {
 
     // 修改一条userinfos信息
     @PostMapping("/res/updateoneuserinfo")
-    public String updateoneuserinfo() {
-        return "success";
+    public String updateoneuserinfo(@RequestBody Userinfos userinfos) {
+        String str=iUserinfosService.updateoneuserinfo(userinfos);
+        return str;
     }
 
     // 删除一条userinfos信息
     @PostMapping("/res/deleteoneuserinfo")
-    public String deleteoneuserinfo() {
-        return "success";
+    public String deleteoneuserinfo(@RequestBody Userinfos userinfos) {
+        String str=iUserinfosService.deleteoneuserinfo(userinfos);
+        return str;
     }
 }
