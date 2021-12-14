@@ -1,20 +1,99 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Spring Security SSO Client 2</title>
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
-</head>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://cdn.bootcss.com/vue/2.5.17/vue.min.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  </head>  
+  <body>
+  <div id="app">
+    <div class="navbar">
+      <div></div>
+      <div class="menu_text">
+        图表系统
+      </div>
+      <div class="menu_user">
+        Welcome, <span th:text="${#authentication.name}">Name</span>
+        <a class="menu_exit" href="/">exit</a>
+      </div>
+    </div>
+    <el-divider ></el-divider>
+    <div id="main" style="width: 800px;height:600px;margin:0 auto;"></div>
+  </div>
+  </body>
+  <script type="text/javascript">
+    new Vue({
+      el : '#app',
+      data() {
+        return {
 
-<body>
-<div class="container">
-	<div class="col-sm-12">
-		<h1>Secured Page</h1>
-		Welcome, <span th:text="${#authentication.name}">Name</span>
-		<br/>
-        Your authorities are <span th:text="${#authentication.authorities}">authorities</span>        
-	</div>
-</div>
-</body>
+        }
+      }
+    })
+    var myChart = echarts.init(document.getElementById('main'));
+    // 指定图表的配置项和数据
+    var option = {
+      title: {
+        text: '未来一周气温变化'
+      },
+      tooltip: {},
+      legend: {},
+      toolbox: {},
+      xAxis: [{
+        data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+      }],
+      yAxis: { },
+      series: [{
+        name: '最高气温',
+        type: 'line',
+        data: [11, 11, 15, 13, 12, 13, 10]
+      },
+        {
+          name: '最低气温',
+          type: 'line',
+          data: [1, -2, 2, 5, 3, 2, 0]
+        }]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+
+
+  </script>
+
+  <style lang="scss" scoped>
+    .navbar {
+      height: 50px;
+      overflow: hidden;
+      position: relative;
+      margin: 0 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .el-divider--horizontal {
+      display: block;
+      height: 1px;
+      width: 100%;
+      margin: 0 0 25px 0;
+    }
+    .menu_text {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+    .menu_user{
+      font-size: 16px;
+      color: #888;
+    }
+    .menu_exit{
+      margin-left: 15px;
+    }
+    .menu_exit:hover{
+      cursor: pointer;
+      color: dodgerblue;
+    }
+  </style>
 </html>

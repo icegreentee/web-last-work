@@ -9,7 +9,7 @@
 	<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
 </head>
 
-<body>
+<body class="bgimg">
 <div class="login-box" id="app" >
    <el-form action="/auth/login" method="post" label-position="left" label-width="0px" class="demo-ruleForm login-container">
     <h2 class="title" >统一认证登录平台</h2>
@@ -46,6 +46,9 @@
 </script>
 
 <style lang="scss" scoped>
+    .bgimg{
+
+    }
   .login-container {
     -webkit-border-radius: 5px;
     border-radius: 5px;
