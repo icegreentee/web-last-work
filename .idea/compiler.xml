@@ -17,6 +17,7 @@
       <module name="spring-oauth-client" options="-parameters" />
       <module name="spring-oauth-client2" options="-parameters" />
       <module name="spring-oauth-server" options="-parameters" />
+      <module name="web-last-work-master" options="-parameters" />
     </option>
   </component>
 </project>

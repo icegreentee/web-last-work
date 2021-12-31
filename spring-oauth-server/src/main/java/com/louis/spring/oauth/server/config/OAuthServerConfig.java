@@ -38,6 +38,7 @@ public class OAuthServerConfig extends AuthorizationServerConfigurerAdapter {
     DataSource dataSource;
     @Bean
     ClientDetailsService clientDetailsService() {
+        // 存储客户端信息
         return new JdbcClientDetailsService(dataSource);
     }
     @Override
@@ -51,6 +52,7 @@ public class OAuthServerConfig extends AuthorizationServerConfigurerAdapter {
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+        // token 存储在redis
         endpoints.tokenStore(tokenStore()).authenticationManager(authenticationManager)
                 //支持获取token方式
                 .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST,HttpMethod.PUT,HttpMethod.DELETE,HttpMethod.OPTIONS)

@@ -35,8 +35,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     @Bean
     protected UserDetailsService userDetailsService() {
+        // 基于数据库的认证，通过数据库来保存登录的账号密码
         JdbcUserDetailsManager manager = new JdbcUserDetailsManager();
         manager.setDataSource(dataSource);
+        // 配置事先存储的账号密码
         if (!manager.userExists("admin")) {
             manager.createUser(User.withUsername("admin").password(passwordEncoder().encode("123")).roles("admin").build());
         }
@@ -53,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
     @Override
     public void configure(WebSecurity web) throws Exception {
-        // web.ignoring是直接绕开spring security的所有filter，直接跳过验证
+        // 不需要security保护的资源，不登陆也可以使用
         web.ignoring()
                 .antMatchers("/swagger-ui.html")
                 .antMatchers("/v2/**")
@@ -62,6 +64,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        // 配置统一认证登陆页面，放行登录的地址，自定义登陆页面，对其他的接口进行保护，登出自定义，跨域处理
         http.requestMatchers()
 	        .antMatchers("/login")
 	        .antMatchers("/oauth/authorize")

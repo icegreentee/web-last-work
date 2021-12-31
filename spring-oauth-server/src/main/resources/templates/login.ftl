@@ -9,7 +9,7 @@
 	<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
 </head>
 
-<body class="bgimg">
+<body class="bg">
 <div class="login-box" id="app" >
    <el-form action="/auth/login" method="post" label-position="left" label-width="0px" class="demo-ruleForm login-container">
     <h2 class="title" >统一认证登录平台</h2>
@@ -46,8 +46,13 @@
 </script>
 
 <style lang="scss" scoped>
-    .bgimg{
-
+    .bg{
+        background-image: url("https://cdn.pixabay.com/photo/2019/12/08/19/50/winter-4682051_960_720.jpg");
+        background-repeat: no-repeat;
+        background-size: cover;
+        -webkit-background-size: cover;
+        -o-background-size: cover;
+        background-position: center 0;
     }
   .login-container {
     -webkit-border-radius: 5px;
